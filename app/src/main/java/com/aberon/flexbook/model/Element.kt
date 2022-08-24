@@ -1,5 +1,18 @@
 package com.aberon.flexbook.model
 
-interface Element {
-    val parameters: List<String>
+import android.os.Parcel
+import android.os.Parcelable
+
+interface Element : Parcelable {
+    object CREATOR : Parcelable.Creator<Element> {
+        override fun createFromParcel(p0: Parcel?): Element {
+            TODO("Not yet implemented")
+        }
+
+        override fun newArray(p0: Int): Array<Element> {
+            TODO("Not yet implemented")
+        }
+    }
+
+    val parameters: List<String>?
 }
