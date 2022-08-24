@@ -9,7 +9,7 @@ class Book(
     val authors: List<Author>?,
     val description: String?,
     val type: BookType?,
-    val image: Bitmap?,
+    val covers: List<Bitmap>?,
     val path: String?,
     val sections: List<Section>?
 ) : Parcelable {
@@ -28,7 +28,7 @@ class Book(
         parcel.writeTypedList(authors)
         parcel.writeString(description)
         parcel.writeParcelable(type, flags)
-        parcel.writeParcelable(image, flags)
+        parcel.writeTypedList(covers)
         parcel.writeString(path)
         parcel.writeTypedList(sections)
     }

@@ -36,7 +36,7 @@ class BookFragment : Fragment() {
         if (book != null) {
             view.findViewById<TextView>(R.id.bookName).text = book!!.title
             view.findViewById<TextView>(R.id.bookDescription).text = book!!.description
-            book!!.image?.let { image ->
+            book!!.covers?.lastOrNull()?.let { image ->
                 view.findViewById<ImageView>(R.id.bookCover).apply {
                     setImageBitmap(image)
                 }

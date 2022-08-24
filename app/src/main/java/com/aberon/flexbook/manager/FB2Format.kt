@@ -23,8 +23,13 @@ class FB2Format : Format {
             }
             val fictionBook = FictionBook(file)
             val title = fictionBook.title
-            val imageBinary = fictionBook.binaries.values.last() //TODO fictionBook.description.titleInfo.coverPage
-            val encodeByte: ByteArray = Base64.decode(imageBinary.binary, Base64.DEFAULT)
+            val covers = fictionBook.description.titleInfo.coverPage.map { cover ->
+                fictionBook.binaries[cover.value.removePrefix("#")]!!.let { binary ->
+                    Base64.decode(binary.binary, Base64.DEFAULT)
+                }.let { coverBinary ->
+                    BitmapFactory.decodeByteArray(coverBinary, 0, coverBinary.size)
+                }
+            }
             val authors = fictionBook.authors.map { person ->
                 Author(
                     person.lastName ?: "",
@@ -55,7 +60,7 @@ class FB2Format : Format {
                 authors,
                 "",
                 BookType.FB2,
-                BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size),
+                covers,
                 file.absolutePath,
                 sections
             )
