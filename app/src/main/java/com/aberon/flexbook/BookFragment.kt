@@ -1,5 +1,6 @@
 package com.aberon.flexbook
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -7,37 +8,49 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.aberon.flexbook.databinding.FragmentBookBinding
 import com.aberon.flexbook.model.Book
 
-const val ARG_PARAM1 = "book"
+const val FRAGMENT_BOOK_PARAM = "book"
 
 class BookFragment : Fragment() {
     private var book: Book? = null
+    private lateinit var binding: FragmentBookBinding
+    private lateinit var bookName: TextView
+    private lateinit var bookDescription: TextView
+    private lateinit var bookCover: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            book = it.getParcelable<Book>(ARG_PARAM1)
+            book = it.getParcelable(FRAGMENT_BOOK_PARAM)
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_book, container, false).apply {
-            setOnClickListener {
-                //TODO open book
+    ): View {
+        binding = FragmentBookBinding.inflate(inflater, container, false)
+        bookName = binding.bookName
+        bookDescription = binding.bookDescription
+        bookCover = binding.bookCover
+        val view = binding.root
+        view.setOnClickListener {
+            val intent = Intent(activity, ReaderActivity::class.java).apply {
+                putExtra(READER_BOOK_PARAM, book)
             }
+            startActivity(intent)
         }
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (book != null) {
-            view.findViewById<TextView>(R.id.bookName).text = book!!.title
-            view.findViewById<TextView>(R.id.bookDescription).text = book!!.description
+            bookName.text = book!!.title
+            bookDescription.text = book!!.description
             book!!.covers?.lastOrNull()?.let { image ->
-                view.findViewById<ImageView>(R.id.bookCover).apply {
+                bookCover.apply {
                     setImageBitmap(image)
                 }
             }
@@ -56,7 +69,7 @@ class BookFragment : Fragment() {
         fun newInstance(param1: Book) =
             BookFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ARG_PARAM1, param1)
+                    putParcelable(FRAGMENT_BOOK_PARAM, param1)
                 }
             }
     }

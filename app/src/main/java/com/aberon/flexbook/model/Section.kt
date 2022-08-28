@@ -7,15 +7,15 @@ import android.os.Parcelable
 class Section(
     val title: String?,
     val annotation: List<Element>?,
-    val elements: List<Element>?,
+    val elements: List<Paragraph>?,
     val epigraph: List<Element>?,
     val image: Bitmap?,
     override val parameters: List<String>?
-): Element {
+) : Element {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.createTypedArrayList(Element.CREATOR),
-        parcel.createTypedArrayList(Element.CREATOR),
+        parcel.createTypedArrayList(Paragraph.CREATOR),
         parcel.createTypedArrayList(Element.CREATOR),
         parcel.readParcelable(Bitmap::class.java.classLoader),
         parcel.createStringArrayList()

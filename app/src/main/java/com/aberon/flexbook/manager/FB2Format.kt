@@ -60,7 +60,7 @@ class FB2Format : Format {
                 authors,
                 "",
                 BookType.FB2,
-                covers,
+                null,// TODO large covers,
                 file.absolutePath,
                 sections
             )

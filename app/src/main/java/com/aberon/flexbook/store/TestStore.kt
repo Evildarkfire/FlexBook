@@ -2,15 +2,18 @@ package com.aberon.flexbook.store
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.aberon.flexbook.ARG_PARAM1
+import com.aberon.flexbook.FRAGMENT_BOOK_PARAM
 import com.aberon.flexbook.BookFragment
 import com.aberon.flexbook.model.Author
 import com.aberon.flexbook.model.Book
 import com.aberon.flexbook.model.BookType
 
 class TestStore : Store {
-    private var _books: Map<String, Pair<Book, Fragment>> = mutableMapOf()
-    private var _i = 16
+    companion object {
+        private var _books: Map<String, Pair<Book, Fragment>> = mutableMapOf()
+    }
+
+    private var _i = 3
 
     init {
         (1..3).forEach { i ->
@@ -34,7 +37,7 @@ class TestStore : Store {
             )
             val fragment = BookFragment()
             fragment.arguments = Bundle().apply {
-                putParcelable(ARG_PARAM1, book)
+                putParcelable(FRAGMENT_BOOK_PARAM, book)
             }
             _books = _books + (i.toString() to (book to fragment))
         }
@@ -46,7 +49,7 @@ class TestStore : Store {
     override fun addBook(book: Book): Fragment {
         val bookFragment = BookFragment()
         bookFragment.arguments = Bundle().apply {
-            putParcelable(ARG_PARAM1, book)
+            putParcelable(FRAGMENT_BOOK_PARAM, book)
         }
         _books = _books + ((_i++).toString() to (book to bookFragment))
         return bookFragment
