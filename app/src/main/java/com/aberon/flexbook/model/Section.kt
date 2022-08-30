@@ -19,8 +19,7 @@ class Section(
         parcel.createTypedArrayList(Element.CREATOR),
         parcel.readParcelable(Bitmap::class.java.classLoader),
         parcel.createStringArrayList()
-    ) {
-    }
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(title)

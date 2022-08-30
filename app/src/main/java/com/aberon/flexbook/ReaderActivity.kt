@@ -8,9 +8,11 @@ import android.os.Handler
 import android.view.View
 import android.view.WindowInsets
 import android.widget.TextView
+import android.widget.Toast
 import com.aberon.flexbook.databinding.ActivityReaderBinding
 import com.aberon.flexbook.model.Book
 import com.aberon.flexbook.tool.BookReader
+import com.aberon.flexbook.tool.OnSwipeTouchListener
 
 const val READER_BOOK_PARAM = "book"
 
@@ -25,6 +27,7 @@ class ReaderActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReaderBinding
     private lateinit var fullscreenContent: TextView
     private val hideHandler = Handler()
+    private lateinit var swipeTouchListener: OnSwipeTouchListener
 
     @SuppressLint("InlinedApi")
     private val hidePart2Runnable = Runnable {
@@ -63,15 +66,24 @@ class ReaderActivity : AppCompatActivity() {
 
         // Set up the user interaction to manually show or hide the system UI.
         fullscreenContent = binding.fullscreenContent
-        fullscreenContent.setOnClickListener { toggle() }
+        // fullscreenContent.setOnClickListener { toggle() } // TODO onBackEvent, always show
 
         // Load book from extra
         book = intent.getParcelableExtra(READER_BOOK_PARAM)
         // Load book Get reader and set page text
-        book?.let { book ->
-            bookReader = BookReader(book, fullscreenContent)
-            fullscreenContent.text = bookReader!!.page
+        book?.let { b ->
+            BookReader(b, fullscreenContent)
         }
+
+        swipeTouchListener = OnSwipeTouchListener(
+            this,
+            onSwipeLeft = {
+                bookReader?.prevPage()
+            },
+            onSwipeRight = {
+                bookReader?.nextPage()
+            }, {}, {})
+        fullscreenContent.setOnTouchListener(swipeTouchListener)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

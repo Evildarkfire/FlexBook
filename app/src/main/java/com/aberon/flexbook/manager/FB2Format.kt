@@ -62,7 +62,8 @@ class FB2Format : Format {
                 BookType.FB2,
                 null,// TODO large covers,
                 file.absolutePath,
-                sections
+                sections,
+                mutableMapOf()
             )
         } catch (e: ParserConfigurationException) {
             e.printStackTrace()

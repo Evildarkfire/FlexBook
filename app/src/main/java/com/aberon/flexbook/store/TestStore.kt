@@ -10,7 +10,7 @@ import com.aberon.flexbook.model.BookType
 
 class TestStore : Store {
     companion object {
-        private var _books: Map<String, Pair<Book, Fragment>> = mutableMapOf()
+        private var booksStore: Map<String, Pair<Book, Fragment>> = mutableMapOf() // TODO remove fragment from store
     }
 
     private var _i = 3
@@ -33,25 +33,26 @@ class TestStore : Store {
                 BookType.FB2,
                 null,
                 "null",
-                emptyList()
+                emptyList(),
+                emptyMap()
             )
             val fragment = BookFragment()
             fragment.arguments = Bundle().apply {
                 putParcelable(FRAGMENT_BOOK_PARAM, book)
             }
-            _books = _books + (i.toString() to (book to fragment))
+            booksStore = booksStore + (i.toString() to (book to fragment))
         }
     }
 
     override val books: Map<String, Pair<Book, Fragment>>
-        get() = _books
+        get() = booksStore
 
     override fun addBook(book: Book): Fragment {
         val bookFragment = BookFragment()
         bookFragment.arguments = Bundle().apply {
             putParcelable(FRAGMENT_BOOK_PARAM, book)
         }
-        _books = _books + ((_i++).toString() to (book to bookFragment))
+        booksStore = booksStore + ((_i++).toString() to (book to bookFragment))
         return bookFragment
     }
 }
