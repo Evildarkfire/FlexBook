@@ -1,6 +1,5 @@
 package com.aberon.flexbook.model
 
-import android.graphics.Bitmap
 import android.os.Parcel
 import android.os.Parcelable
 
@@ -10,7 +9,7 @@ class Book(
     val authors: List<Author>?,
     val description: String?,
     val type: BookType?,
-    val covers: List<Bitmap>?,
+    val covers: List<String>?,
     val path: String?,
     val sections: List<Section>?,
     val parameters: Map<String, String>?
@@ -20,7 +19,7 @@ class Book(
         parcel.createTypedArrayList(Author),
         parcel.readString(),
         parcel.readParcelable(BookType::class.java.classLoader),
-        parcel.createTypedArrayList(Bitmap.CREATOR),
+        parcel.createStringArrayList(),
         parcel.readString(),
         parcel.createTypedArrayList(Section),
         mutableMapOf<String, String>().apply {
@@ -37,7 +36,7 @@ class Book(
         parcel.writeTypedList(authors)
         parcel.writeString(description)
         parcel.writeParcelable(type, flags)
-        parcel.writeTypedList(covers)
+        parcel.writeStringList(covers)
         parcel.writeString(path)
         parcel.writeTypedList(sections)
 

@@ -1,6 +1,6 @@
 package com.aberon.flexbook.manager
 
-import android.graphics.BitmapFactory
+import android.content.Context
 import android.util.Base64
 import com.aberon.flexbook.model.*
 import com.kursx.parser.fb2.FictionBook
@@ -12,7 +12,13 @@ import java.util.stream.Stream
 import javax.xml.parsers.ParserConfigurationException
 
 
-class FB2Format : Format {
+class FB2Format(context: Context) : Format {
+    val COVERS_DIR = File("${context.applicationInfo.dataDir}/covers").apply {
+        if (!exists()) {
+            mkdir()
+        }
+    }
+
     override fun serialize(inputStream: InputStream): Book? {
         return try {
             val file = File.createTempFile("book", ".fb2")
@@ -25,9 +31,11 @@ class FB2Format : Format {
             val title = fictionBook.title
             val covers = fictionBook.description.titleInfo.coverPage.map { cover ->
                 fictionBook.binaries[cover.value.removePrefix("#")]!!.let { binary ->
-                    Base64.decode(binary.binary, Base64.DEFAULT)
-                }.let { coverBinary ->
-                    BitmapFactory.decodeByteArray(coverBinary, 0, coverBinary.size)
+                    File("${COVERS_DIR}/${title}_${binary.id}").apply {
+                        createNewFile()
+                        writeBytes(Base64.decode(binary.binary, Base64.DEFAULT))
+                        //BitmapFactory.decodeByteArray(coverBinary, 0, coverBinary.size)
+                    }.absolutePath
                 }
             }
             val authors = fictionBook.authors.map { person ->
@@ -60,7 +68,7 @@ class FB2Format : Format {
                 authors,
                 "",
                 BookType.FB2,
-                null,// TODO large covers,
+                covers,// TODO large covers,
                 file.absolutePath,
                 sections,
                 mutableMapOf()

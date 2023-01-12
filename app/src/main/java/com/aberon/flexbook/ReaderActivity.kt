@@ -8,7 +8,6 @@ import android.os.Handler
 import android.view.View
 import android.view.WindowInsets
 import android.widget.TextView
-import android.widget.Toast
 import com.aberon.flexbook.databinding.ActivityReaderBinding
 import com.aberon.flexbook.model.Book
 import com.aberon.flexbook.tool.BookReader
@@ -83,7 +82,7 @@ class ReaderActivity : AppCompatActivity() {
             onSwipeRight = {
                 bookReader?.nextPage()
             }, {}, {})
-        fullscreenContent.setOnTouchListener(swipeTouchListener)
+        //fullscreenContent.setOnTouchListener(swipeTouchListener)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

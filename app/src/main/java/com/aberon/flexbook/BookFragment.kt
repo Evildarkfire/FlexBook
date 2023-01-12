@@ -1,6 +1,7 @@
 package com.aberon.flexbook
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -49,10 +50,8 @@ class BookFragment : Fragment() {
         if (book != null) {
             bookName.text = book!!.title
             bookDescription.text = book!!.description
-            book!!.covers?.lastOrNull()?.let { image ->
-                bookCover.apply {
-                    setImageBitmap(image)
-                }
+            book!!.covers?.lastOrNull()?.apply {
+                bookCover.setImageBitmap(BitmapFactory.decodeFile(this))
             }
         }
         super.onViewCreated(view, savedInstanceState)

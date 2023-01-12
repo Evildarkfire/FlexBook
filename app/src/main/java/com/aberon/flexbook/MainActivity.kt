@@ -96,13 +96,13 @@ class MainActivity : AppCompatActivity() {
             if (data?.data != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     contentResolver.openInputStream(data.data!!)
-                        ?.let { inputStream -> FB2Format().serialize(inputStream) }
+                        ?.let { inputStream -> FB2Format(this).serialize(inputStream) }
                         ?.let { book -> addBookFragment(book) }
                 } else {
                     //TODO API < 29
                 }
             } else {
-                Log.d("OPEN_FILE_REQUEST_CODE", "File uri not found {}")
+                Log.d("OPEN_FILE_REQUEST_CODE", "File uri not found {${resultCode}}")
             }
         }
     }
