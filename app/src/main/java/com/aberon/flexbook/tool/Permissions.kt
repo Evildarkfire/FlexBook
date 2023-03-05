@@ -2,9 +2,9 @@ package com.aberon.flexbook.tool
 
 import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
-import android.support.v4.content.PermissionChecker.checkCallingOrSelfPermission
+import androidx.core.content.PermissionChecker
+import androidx.core.content.PermissionChecker.checkCallingOrSelfPermission
 
 class Permissions(private val context: Context) {
     companion object {
@@ -23,6 +23,6 @@ class Permissions(private val context: Context) {
     }
 
     fun checkPermissions(): Boolean = permissions.any { permission ->
-        checkCallingOrSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+        checkCallingOrSelfPermission(context, permission) == PermissionChecker.PERMISSION_GRANTED
     }
 }

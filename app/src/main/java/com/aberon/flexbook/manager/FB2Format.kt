@@ -8,6 +8,7 @@ import org.xml.sax.SAXException
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import java.util.*
 import java.util.stream.Stream
 import javax.xml.parsers.ParserConfigurationException
 
@@ -19,33 +20,45 @@ class FB2Format(context: Context) : Format {
         }
     }
 
-    override fun serialize(inputStream: InputStream): Book? {
-        return try {
-            val file = File.createTempFile("book", ".fb2")
-            inputStream.use { input ->
-                file.outputStream().use { output ->
-                    input.copyTo(output)
-                }
+    override fun serialize(inputStream: InputStream): BookInfo? {
+        val file = File.createTempFile("book", ".fb2")
+        inputStream.use { input ->
+            file.outputStream().use { output ->
+                input.copyTo(output)
             }
+        }
+        return serialize(file)
+    }
+
+    fun serialize(file: File): BookInfo? {
+        return try {
             val fictionBook = FictionBook(file)
             val title = fictionBook.title
+            val bookId = UUID.randomUUID().toString()
             val covers = fictionBook.description.titleInfo.coverPage.map { cover ->
-                fictionBook.binaries[cover.value.removePrefix("#")]!!.let { binary ->
-                    File("${COVERS_DIR}/${title}_${binary.id}").apply {
-                        createNewFile()
-                        writeBytes(Base64.decode(binary.binary, Base64.DEFAULT))
-                        //BitmapFactory.decodeByteArray(coverBinary, 0, coverBinary.size)
-                    }.absolutePath
-                }
+                val coverId = UUID.randomUUID().toString()
+                Cover(coverId, bookId,
+                    fictionBook.binaries[cover.value.removePrefix("#")]!!.let { binary ->
+                        File("${COVERS_DIR}/${title}_${binary.id}").apply {
+                            createNewFile()
+                            writeBytes(Base64.decode(binary.binary, Base64.DEFAULT))
+                        }.absolutePath
+                    })
             }
             val authors = fictionBook.authors.map { person ->
-                Author(
-                    person.lastName ?: "",
-                    person.middleName ?: "",
-                    person.firstName ?: "",
-                    person.fullName ?: "",
-                    person.nickname ?: "",
-                    person.emails ?: emptyList()
+                val authorId = UUID.randomUUID().toString()
+                AuthorInfo(Author(
+                    authorId, bookId,
+                    person.lastName,
+                    person.middleName,
+                    person.firstName,
+                    person.fullName,
+                    person.nickname,
+                ),
+                    person.emails.map { email ->
+                        val emailId = UUID.randomUUID().toString()
+                        Email(emailId, authorId, email)
+                    }
                 )
             }
             val sections = fictionBook.body.sections.map { section ->
@@ -63,15 +76,16 @@ class FB2Format(context: Context) : Format {
                     emptyList()
                 )
             }
-            Book(
-                title,
-                authors,
-                "",
-                BookType.FB2,
-                covers,// TODO large covers,
-                file.absolutePath,
-                sections,
-                mutableMapOf()
+            BookInfo(
+                Book(
+                    bookId,
+                    title,
+                    "DESC", // TODO DESC
+                    BookType.FB2,
+                    file.absolutePath,
+                ).apply { this.sections = sections },
+                covers,
+                authors
             )
         } catch (e: ParserConfigurationException) {
             e.printStackTrace()
@@ -85,7 +99,7 @@ class FB2Format(context: Context) : Format {
         }
     }
 
-    override fun deserialize(book: Book): Stream<Byte> {
+    override fun deserialize(book: BookInfo): Stream<Byte> {
         TODO("Not yet implemented")
     }
 }

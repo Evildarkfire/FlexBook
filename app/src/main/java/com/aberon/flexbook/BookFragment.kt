@@ -3,28 +3,36 @@ package com.aberon.flexbook
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.aberon.flexbook.databinding.FragmentBookBinding
-import com.aberon.flexbook.model.Book
+import com.aberon.flexbook.model.BookInfo
+import com.aberon.flexbook.store.SQLStore
 
 const val FRAGMENT_BOOK_PARAM = "book"
 
 class BookFragment : Fragment() {
-    private var book: Book? = null
     private lateinit var binding: FragmentBookBinding
+    private lateinit var store: SQLStore
+
+    private var bookInfo: BookInfo? = null
     private lateinit var bookName: TextView
     private lateinit var bookDescription: TextView
     private lateinit var bookCover: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            book = it.getParcelable(FRAGMENT_BOOK_PARAM)
+
+        store = SQLStore.getInstance(requireContext())
+
+        arguments?.let { bundle ->
+            bundle.getString(FRAGMENT_BOOK_PARAM)?.let { id->
+                bookInfo = store.getBookById(id)
+            }
         }
     }
 
@@ -39,7 +47,9 @@ class BookFragment : Fragment() {
         val view = binding.root
         view.setOnClickListener {
             val intent = Intent(activity, ReaderActivity::class.java).apply {
-                putExtra(READER_BOOK_PARAM, book)
+                bookInfo?.let { info ->
+                    putExtra(READER_BOOK_PARAM, info.book.bookId)
+                }
             }
             startActivity(intent)
         }
@@ -47,11 +57,13 @@ class BookFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (book != null) {
-            bookName.text = book!!.title
-            bookDescription.text = book!!.description
-            book!!.covers?.lastOrNull()?.apply {
-                bookCover.setImageBitmap(BitmapFactory.decodeFile(this))
+        if (bookInfo != null) {
+            bookInfo?.let { info ->
+                bookName.text = info.book.title
+                bookDescription.text = info.book.description
+                info.covers.lastOrNull()?.apply {
+                    bookCover.setImageBitmap(BitmapFactory.decodeFile(coverPath))
+                }
             }
         }
         super.onViewCreated(view, savedInstanceState)
@@ -65,10 +77,10 @@ class BookFragment : Fragment() {
          * @return A new instance of fragment BookFragment.
          */
         @JvmStatic
-        fun newInstance(param1: Book) =
+        fun newInstance(param1: Int) =
             BookFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(FRAGMENT_BOOK_PARAM, param1)
+                    putInt(FRAGMENT_BOOK_PARAM, param1)
                 }
             }
     }

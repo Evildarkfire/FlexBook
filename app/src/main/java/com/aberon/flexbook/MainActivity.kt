@@ -5,29 +5,30 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.aberon.flexbook.manager.FB2Format
-import com.aberon.flexbook.model.Book
-import com.aberon.flexbook.store.TestStore
+import com.aberon.flexbook.model.BookInfo
+import com.aberon.flexbook.store.SQLStore
 import com.aberon.flexbook.tool.Permissions
 import com.aberon.flexbook.tool.RequestCodes
 
 
 class MainActivity : AppCompatActivity() {
-    private val bocksStore = TestStore()
-    private val permissions = Permissions(this)
+    private lateinit var store: SQLStore
+    private lateinit var permissions: Permissions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        permissions = Permissions(this)
+        store = SQLStore.getInstance(this)
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        bocksStore.books.forEach {
-            fragmentTransaction.add(R.id.booksList, it.value.second, it.key)
+        store.books.forEach { bookInfo ->
+            fragmentTransaction.add(R.id.booksList, createBookFragment(bookInfo), bookInfo.book.bookId)
         }
         fragmentTransaction.commit()
     }
@@ -48,14 +49,21 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, RequestCodes.OPEN_FILE_REQUEST_CODE)
     }
 
-    private fun addBookFragment(book: Book) {
+    private fun addBookFragment(bookInfo: BookInfo) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val bookFragment = bocksStore.addBook(book)
-        fragmentTransaction.add(R.id.booksList, bookFragment, book.toString())
-
+        store.addBook(bookInfo)
+        fragmentTransaction.add(R.id.booksList, createBookFragment(bookInfo), bookInfo.book.bookId)
         fragmentTransaction.commit()
+    }
+
+    private fun createBookFragment(bookInfo: BookInfo): BookFragment {
+        val bookFragment = BookFragment()
+        bookFragment.arguments = Bundle().apply {
+            putString(FRAGMENT_BOOK_PARAM, bookInfo.book.bookId)
+        }
+        return bookFragment
     }
 
     private fun requestPermissions() {
@@ -97,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     contentResolver.openInputStream(data.data!!)
                         ?.let { inputStream -> FB2Format(this).serialize(inputStream) }
-                        ?.let { book -> addBookFragment(book) }
+                        ?.let { bookInfo -> addBookFragment(bookInfo) }
                 } else {
                     //TODO API < 29
                 }

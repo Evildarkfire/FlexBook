@@ -1,13 +1,11 @@
 package com.aberon.flexbook.tool
 
-import android.text.Layout
-import android.view.ViewTreeObserver
 import android.widget.TextView
-import com.aberon.flexbook.model.Book
+import com.aberon.flexbook.model.BookInfo
 
 
 class BookReader(
-    private val book: Book,
+    private val book: BookInfo,
     private val textView: TextView
 ) {
     companion object {
@@ -17,10 +15,10 @@ class BookReader(
         private const val SECTION_NUM = "section_num"
     }
 
-    var currentPage = book.parameters?.get(CURRENT_PAGE) ?: 0
-    var countPages = book.parameters?.get(COUNT_PAGES) ?: 0
-    var currentSection = book.parameters?.get(CURRENT_SECTION) ?: 0
-    var sectionNum = book.parameters?.get(SECTION_NUM) ?: 0
+    var currentPage = book.book.parameters?.get(CURRENT_PAGE) ?: 0
+    var countPages = book.book.parameters?.get(COUNT_PAGES) ?: 0
+    var currentSection = book.book.parameters?.get(CURRENT_SECTION) ?: 0
+    var sectionNum = book.book.parameters?.get(SECTION_NUM) ?: 0
 
     private val pages: Map<Int, String> = mutableMapOf()
 
@@ -68,7 +66,7 @@ class BookReader(
     private val page: String
         get() {
 
-            val sections = book.sections?.map { section ->
+            val sections = book.book.sections?.map { section ->
                 section.elements?.map { paragraph ->
                     "${paragraph.text}\n"
                 }?.requireNoNulls()?.joinToString("\n")

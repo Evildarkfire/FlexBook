@@ -1,6 +1,6 @@
 package com.aberon.flexbook
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -9,7 +9,8 @@ import android.view.View
 import android.view.WindowInsets
 import android.widget.TextView
 import com.aberon.flexbook.databinding.ActivityReaderBinding
-import com.aberon.flexbook.model.Book
+import com.aberon.flexbook.model.BookInfo
+import com.aberon.flexbook.store.SQLStore
 import com.aberon.flexbook.tool.BookReader
 import com.aberon.flexbook.tool.OnSwipeTouchListener
 
@@ -21,12 +22,13 @@ const val READER_BOOK_PARAM = "book"
  */
 class ReaderActivity : AppCompatActivity() {
 
-    private var book: Book? = null
+    private var book: BookInfo? = null
     private var bookReader: BookReader? = null
     private lateinit var binding: ActivityReaderBinding
     private lateinit var fullscreenContent: TextView
     private val hideHandler = Handler()
     private lateinit var swipeTouchListener: OnSwipeTouchListener
+    private lateinit var store: SQLStore
 
     @SuppressLint("InlinedApi")
     private val hidePart2Runnable = Runnable {
@@ -62,13 +64,16 @@ class ReaderActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         isFullscreen = true
+        store = SQLStore.getInstance(this)
 
         // Set up the user interaction to manually show or hide the system UI.
         fullscreenContent = binding.fullscreenContent
         // fullscreenContent.setOnClickListener { toggle() } // TODO onBackEvent, always show
 
         // Load book from extra
-        book = intent.getParcelableExtra(READER_BOOK_PARAM)
+        intent.getStringExtra(READER_BOOK_PARAM)?.let {
+            book = store.getBookById(it)
+        }
         // Load book Get reader and set page text
         book?.let { b ->
             BookReader(b, fullscreenContent)

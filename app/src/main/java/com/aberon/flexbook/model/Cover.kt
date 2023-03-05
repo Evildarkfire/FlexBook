@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "author",
+    tableName = "covers",
     foreignKeys = [
         ForeignKey(
             entity = Book::class,
@@ -16,13 +16,9 @@ import androidx.room.PrimaryKey
         ),
     ]
 )
-data class Author(
+class Cover(
     @PrimaryKey
-    var authorId: String,
+    var coverId: String,
     var bookId: String,
-    var lastName: String?,
-    var middleName: String?,
-    var firstName: String?,
-    var fullName: String?,
-    var nickname: String?
+    var coverPath: String
 )
