@@ -23,14 +23,7 @@ class SQLStore(val context: Context) {
         .build()
 
     val books: List<BookInfo>
-        get() {
-            val booksInfo = db.storeDao().getAll()
-            booksInfo.forEach { bookInfo ->
-                loadBookSection(bookInfo)
-            }
-            return booksInfo
-        }
-
+        get() = db.storeDao().getAll()
 
     fun getBookById(bookId: String): BookInfo {
         val bookInfo = db.storeDao().loadAllById(bookId)
@@ -56,6 +49,10 @@ class SQLStore(val context: Context) {
     fun deleteBook(book: Book) = db.storeDao().delete(book)
 
     private fun loadBookSection(bookInfo: BookInfo) {
+        val f = File(bookInfo.book.path)
+        if (!f.exists()) {
+            throw java.lang.Exception() // TODO miss path
+        }
         FB2Format(context).serialize(File(bookInfo.book.path))?.let { b ->
             bookInfo.book.sections = b.book.sections
             bookInfo.book.parameters = b.book.parameters

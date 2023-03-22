@@ -9,13 +9,13 @@ data class BookInfo(
     @Relation(
         entity = Cover::class,
         parentColumn = "bookId",
-        entityColumn = "bookId"
+        entityColumn = "coverBookId"
     )
     var covers: List<Cover>,
     @Relation(
         entity = Author::class,
         parentColumn = "bookId",
-        entityColumn = "bookId"
+        entityColumn = "ownedBookId"
     )
     var authors: List<AuthorInfo>
 )

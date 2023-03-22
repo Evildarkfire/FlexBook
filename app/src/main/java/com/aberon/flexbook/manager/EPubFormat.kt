@@ -8,7 +8,7 @@ import java.util.stream.Stream
 class EPubFormat: Format {
 
     override fun serialize(inputStream: InputStream): BookInfo? {
-        val file = File.createTempFile("book", ".fb2")
+        val file = File.createTempFile("book", ".epub")
         inputStream.use { input ->
             file.outputStream().use { output ->
                 input.copyTo(output)
