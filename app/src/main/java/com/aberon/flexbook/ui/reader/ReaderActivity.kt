@@ -1,4 +1,4 @@
-package com.aberon.flexbook
+package com.aberon.flexbook.ui.reader
 
 import androidx.appcompat.app.AppCompatActivity
 import android.annotation.SuppressLint
@@ -90,15 +90,13 @@ class ReaderActivity : AppCompatActivity() {
         //fullscreenContent.setOnTouchListener(swipeTouchListener)
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-
+    override fun onPostResume() {
+        super.onPostResume()
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(UI_DELAY)
     }
-
     private fun toggle() {
         if (isFullscreen) {
             hide()

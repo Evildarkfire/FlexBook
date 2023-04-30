@@ -1,4 +1,4 @@
-package com.aberon.flexbook
+package com.aberon.flexbook.ui.book
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.aberon.flexbook.ui.reader.READER_BOOK_PARAM
+import com.aberon.flexbook.ui.reader.ReaderActivity
 import com.aberon.flexbook.databinding.FragmentBookBinding
 import com.aberon.flexbook.model.BookInfo
 import com.aberon.flexbook.store.SQLStore
@@ -21,7 +23,7 @@ class BookFragment : Fragment() {
 
     private var bookInfo: BookInfo? = null
     private lateinit var bookName: TextView
-    private lateinit var bookDescription: TextView
+    private lateinit var bookAuthor: TextView
     private lateinit var bookCover: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +44,7 @@ class BookFragment : Fragment() {
     ): View {
         binding = FragmentBookBinding.inflate(inflater, container, false)
         bookName = binding.bookName
-        bookDescription = binding.bookDescription
+        bookAuthor = binding.bookAuthor
         bookCover = binding.bookCover
         val view = binding.root
         view.setOnClickListener {
@@ -60,7 +62,9 @@ class BookFragment : Fragment() {
         if (bookInfo != null) {
             bookInfo?.let { info ->
                 bookName.text = info.book.title
-                bookDescription.text = info.book.description
+                info.authors.lastOrNull()?.let { author ->
+                    bookAuthor.text = author.author.fullName
+                }
                 info.covers.lastOrNull()?.apply {
                     bookCover.setImageBitmap(BitmapFactory.decodeFile(coverPath))
                 }

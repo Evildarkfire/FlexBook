@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.FlexBook" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Primary brand color. -->
@@ -18,4 +18,13 @@
         <item name="fullscreenBackgroundColor">@color/grey</item>
         <item name="fullscreenTextColor">@color/black</item>
     </style>
+
+    <style name="Theme.FlexBook.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.FlexBook.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.FlexBook.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

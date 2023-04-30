@@ -1,117 +1,52 @@
 package com.aberon.flexbook
 
-import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
+import android.view.Menu
+import com.google.android.material.navigation.NavigationView
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import android.util.Log
-import android.view.View
-import android.widget.Toast
-import com.aberon.flexbook.manager.FB2Format
-import com.aberon.flexbook.model.BookInfo
-import com.aberon.flexbook.store.SQLStore
-import com.aberon.flexbook.tool.Permissions
-import com.aberon.flexbook.tool.RequestCodes
-
+import com.aberon.flexbook.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var store: SQLStore
-    private lateinit var permissions: Permissions
+
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        permissions = Permissions(this)
-        store = SQLStore.getInstance(this)
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        store.books.forEach { bookInfo ->
-            fragmentTransaction.add(R.id.booksList, createBookFragment(bookInfo), bookInfo.book.bookId)
-        }
-        fragmentTransaction.commit()
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setSupportActionBar(binding.appBarMain.toolbar)
+
+        val drawerLayout: DrawerLayout = binding.drawerLayout
+        val navView: NavigationView = binding.navView
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.nav_books
+            ), drawerLayout
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
     }
 
-    fun onClickAddBook(view: View) {
-        if (permissions.checkPermissions()) {
-            openBookFromFile()
-        } else {
-            requestPermissions()
-        }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.main, menu)
+        return true
     }
 
-    private fun openBookFromFile() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "application/*"
-        }
-        startActivityForResult(intent, RequestCodes.OPEN_FILE_REQUEST_CODE)
-    }
-
-    private fun addBookFragment(bookInfo: BookInfo) {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-
-        store.addBook(bookInfo)
-        fragmentTransaction.add(R.id.booksList, createBookFragment(bookInfo), bookInfo.book.bookId)
-        fragmentTransaction.commit()
-    }
-
-    private fun createBookFragment(bookInfo: BookInfo): BookFragment {
-        val bookFragment = BookFragment()
-        bookFragment.arguments = Bundle().apply {
-            putString(FRAGMENT_BOOK_PARAM, bookInfo.book.bookId)
-        }
-        return bookFragment
-    }
-
-    private fun requestPermissions() {
-        requestPermissions(Permissions.permissions, RequestCodes.PERMISSION_REQUEST_CODE)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResultsrequestCode: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResultsrequestCode)
-        when (requestCode) {
-            RequestCodes.PERMISSION_REQUEST_CODE -> if (
-                grantResultsrequestCode.any { result -> result == PackageManager.PERMISSION_GRANTED }
-            ) {
-                openBookFromFile()
-            } else {
-                Toast.makeText(
-                    applicationContext,
-                    "Нет разрешения на чтение",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-            }
-            else ->
-                return
-        }
-    }
-
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RequestCodes.OPEN_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            if (data?.data != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    contentResolver.openInputStream(data.data!!)
-                        ?.let { inputStream -> FB2Format(this).serialize(inputStream) }
-                        ?.let { bookInfo -> addBookFragment(bookInfo) }
-                } else {
-                    //TODO API < 29
-                }
-            } else {
-                Log.d("OPEN_FILE_REQUEST_CODE", "File uri not found {${resultCode}}")
-            }
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }

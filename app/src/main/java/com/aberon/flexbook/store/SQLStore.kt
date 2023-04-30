@@ -8,7 +8,7 @@ import com.aberon.flexbook.model.BookInfo
 import com.aberon.flexbook.model.Cover
 import java.io.File
 
-class SQLStore(val context: Context) {
+class SQLStore(private val context: Context) {
     companion object {
         private var instance: SQLStore? = null
 
