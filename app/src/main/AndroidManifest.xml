@@ -22,12 +22,13 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/title_activity_main2"
+            android:label="@string/title_activity_main"
             android:theme="@style/Theme.FlexBook.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+                <data android:scheme="content" android:mimeType="application/octet-stream"
+                    android:pathPattern=".*\\.fb2"/>
             </intent-filter>
 
             <meta-data

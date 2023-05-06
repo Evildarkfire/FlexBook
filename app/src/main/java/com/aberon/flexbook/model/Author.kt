@@ -25,6 +25,14 @@ data class Author(
     var lastName: String?,
     var middleName: String?,
     var firstName: String?,
-    var fullName: String?,
     var nickname: String?
-)
+) {
+    val fullName: String?
+        get() {
+            return if (lastName != null && firstName != null && middleName != null) {
+                "$lastName $firstName $middleName"
+            } else if (lastName != null && firstName != null) {
+                "$lastName $firstName"
+            } else lastName
+        }
+}

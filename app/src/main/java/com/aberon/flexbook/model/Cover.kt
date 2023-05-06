@@ -3,6 +3,7 @@ package com.aberon.flexbook.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -23,4 +24,7 @@ class Cover(
     @ColumnInfo(index = true)
     var coverBookId: String,
     var coverPath: String
-)
+) {
+    @Ignore
+    var coverBytes: ByteArray? = null
+}

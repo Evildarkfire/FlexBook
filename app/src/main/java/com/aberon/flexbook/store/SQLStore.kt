@@ -2,13 +2,12 @@ package com.aberon.flexbook.store
 
 import android.content.Context
 import androidx.room.Room
-import com.aberon.flexbook.manager.FB2Format
+import com.aberon.flexbook.manager.Format
 import com.aberon.flexbook.model.Book
 import com.aberon.flexbook.model.BookInfo
 import com.aberon.flexbook.model.Cover
-import java.io.File
 
-class SQLStore(private val context: Context) {
+class SQLStore(context: Context) {
     companion object {
         private var instance: SQLStore? = null
 
@@ -27,7 +26,7 @@ class SQLStore(private val context: Context) {
 
     fun getBookById(bookId: String): BookInfo {
         val bookInfo = db.storeDao().loadAllById(bookId)
-        loadBookSection(bookInfo)
+        Format.loadBookContent(bookInfo)
         return bookInfo
     }
 
@@ -47,15 +46,4 @@ class SQLStore(private val context: Context) {
     fun addCover(cover: Cover) = db.storeDao().insert(cover)
     fun addBooks(books: List<Book>) = db.storeDao().insertAll(books)
     fun deleteBook(book: Book) = db.storeDao().delete(book)
-
-    private fun loadBookSection(bookInfo: BookInfo) {
-        val f = File(bookInfo.book.path)
-        if (!f.exists()) {
-            throw java.lang.Exception() // TODO miss path
-        }
-        FB2Format(context).serialize(File(bookInfo.book.path))?.let { b ->
-            bookInfo.book.sections = b.book.sections
-            bookInfo.book.parameters = b.book.parameters
-        }
-    }
 }

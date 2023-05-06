@@ -13,13 +13,18 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.aberon.flexbook.R
 import com.aberon.flexbook.databinding.FragmentBooksBinding
-import com.aberon.flexbook.manager.FB2Format
+import com.aberon.flexbook.manager.Format
 import com.aberon.flexbook.model.BookInfo
+import com.aberon.flexbook.store.FilesStore
 import com.aberon.flexbook.store.SQLStore
 import com.aberon.flexbook.tool.Permissions
-import com.aberon.flexbook.tool.RequestCodes
 
 class BooksFragment : Fragment() {
+
+    companion object {
+        const val OPEN_FILE_REQUEST_CODE = 111
+        const val PERMISSION_REQUEST_CODE = 112
+    }
 
     private var _binding: FragmentBooksBinding? = null
 
@@ -29,6 +34,7 @@ class BooksFragment : Fragment() {
 
     private lateinit var store: SQLStore
     private lateinit var permissions: Permissions
+    private lateinit var filesStore: FilesStore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,10 +48,15 @@ class BooksFragment : Fragment() {
 
         permissions = Permissions(activity!!.applicationContext)
         store = SQLStore.getInstance(activity!!.applicationContext)
+        filesStore = FilesStore(activity!!.applicationContext)
         val fragmentManager = parentFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         store.books.forEach { bookInfo ->
-            fragmentTransaction.add(R.id.booksList, createBookFragment(bookInfo), bookInfo.book.bookId)
+            fragmentTransaction.add(
+                R.id.booksList,
+                createBookFragment(bookInfo),
+                bookInfo.book.bookId
+            )
         }
         fragmentTransaction.commit()
 
@@ -61,18 +72,27 @@ class BooksFragment : Fragment() {
     }
 
     private fun openBookFromFile() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
-            type = "application/*"
+            type = "*/*"
+            putExtra(
+                Intent.EXTRA_MIME_TYPES,
+                arrayOf("application/octet-stream", "application/epub+zip")
+            )
         }
-        startActivityForResult(intent, RequestCodes.OPEN_FILE_REQUEST_CODE)
+        startActivityForResult(intent, OPEN_FILE_REQUEST_CODE)
+    }
+
+    private fun saveBook(bookInfo: BookInfo) {
+        bookInfo.covers.forEach { cover ->
+            cover.coverPath = filesStore.writeCover(cover.coverBytes!!).absolutePath
+        }
+        store.addBook(bookInfo)
     }
 
     private fun addBookFragment(bookInfo: BookInfo) {
         val fragmentManager = parentFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-
-        store.addBook(bookInfo)
         fragmentTransaction.add(R.id.booksList, createBookFragment(bookInfo), bookInfo.book.bookId)
         fragmentTransaction.commit()
     }
@@ -80,13 +100,13 @@ class BooksFragment : Fragment() {
     private fun createBookFragment(bookInfo: BookInfo): BookFragment {
         val bookFragment = BookFragment()
         bookFragment.arguments = Bundle().apply {
-            putString(FRAGMENT_BOOK_PARAM, bookInfo.book.bookId)
+            putString(BookFragment.FRAGMENT_BOOK_PARAM, bookInfo.book.bookId)
         }
         return bookFragment
     }
 
     private fun requestPermissions() {
-        requestPermissions(Permissions.permissions, RequestCodes.PERMISSION_REQUEST_CODE)
+        requestPermissions(Permissions.permissions, PERMISSION_REQUEST_CODE)
     }
 
     override fun onRequestPermissionsResult(
@@ -96,7 +116,7 @@ class BooksFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResultsrequestCode)
         when (requestCode) {
-            RequestCodes.PERMISSION_REQUEST_CODE -> if (
+            PERMISSION_REQUEST_CODE -> if (
                 grantResultsrequestCode.any { result -> result == PackageManager.PERMISSION_GRANTED }
             ) {
                 openBookFromFile()
@@ -119,12 +139,18 @@ class BooksFragment : Fragment() {
         data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RequestCodes.OPEN_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == OPEN_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (data?.data != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    activity?.contentResolver?.openInputStream(data.data!!)
-                        ?.let { inputStream -> FB2Format(activity!!.applicationContext).serialize(inputStream) }
-                        ?.let { bookInfo -> addBookFragment(bookInfo) }
+                    val contentResolver = activity!!.contentResolver!!
+                    val type = contentResolver.getType(data.data!!)
+                    val inputStream = contentResolver.openInputStream(data.data!!)
+                    if (type != null && inputStream != null) {
+                        val file = filesStore.writeBook(inputStream.readBytes())
+                        val bookInfo = Format.serialize(type, file)
+                        saveBook(bookInfo!!) //TODO exception
+                        addBookFragment(bookInfo)
+                    }
                 } else {
                     //TODO API < 29
                 }

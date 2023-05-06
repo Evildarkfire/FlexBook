@@ -97,6 +97,7 @@ class ReaderActivity : AppCompatActivity() {
         // are available.
         delayedHide(UI_DELAY)
     }
+
     private fun toggle() {
         if (isFullscreen) {
             hide()

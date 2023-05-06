@@ -40,18 +40,19 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
-    // format
-    //implementation 'com.github.FolioReader:FolioReader-Android:0.5.4'
-    implementation files('src/main/libs/fb2parser.jar')
-
-    // bd
-    implementation 'androidx.room:room-runtime:2.4.3'
     implementation 'com.google.android.material:material:1.4.+'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
+
+    // format
+    implementation files('src/main/libs/fb2parser.jar')
+    implementation files('src/main/libs/epublib-core-0.5.jar')
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    // bd
+    implementation 'androidx.room:room-runtime:2.4.3'
+    implementation 'androidx.preference:preference:1.2.0'
     // To use Kotlin annotation processing tool (kapt)
     kapt "androidx.room:room-compiler:2.4.3"
 

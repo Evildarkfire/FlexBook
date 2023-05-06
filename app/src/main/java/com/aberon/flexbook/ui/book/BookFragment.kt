@@ -15,8 +15,6 @@ import com.aberon.flexbook.databinding.FragmentBookBinding
 import com.aberon.flexbook.model.BookInfo
 import com.aberon.flexbook.store.SQLStore
 
-const val FRAGMENT_BOOK_PARAM = "book"
-
 class BookFragment : Fragment() {
     private lateinit var binding: FragmentBookBinding
     private lateinit var store: SQLStore
@@ -62,7 +60,7 @@ class BookFragment : Fragment() {
         if (bookInfo != null) {
             bookInfo?.let { info ->
                 bookName.text = info.book.title
-                info.authors.lastOrNull()?.let { author ->
+                info.authors.firstOrNull()?.let { author ->
                     bookAuthor.text = author.author.fullName
                 }
                 info.covers.lastOrNull()?.apply {
@@ -74,6 +72,8 @@ class BookFragment : Fragment() {
     }
 
     companion object {
+        const val FRAGMENT_BOOK_PARAM = "book"
+
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

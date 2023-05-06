@@ -18,4 +18,5 @@
     <color name="transparent_purple_500">#C46200EE</color>
     <color name="transparent_purple_700">#C43700B3</color>
     <color name="transparent_black">#9C000000</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>
