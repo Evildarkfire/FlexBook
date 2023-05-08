@@ -33,4 +33,38 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu consectetur diam, vel varius nulla.\n
+        Nullam consectetur risus et malesuada laoreet. Aenean elementum risus sit amet justo ultrices, in ultrices diam semper. Mauris et orci ante.\n
+        Nam tempus mi at lacus interdum bibendum in nec metus. Praesent lorem diam, iaculis id luctus eu, porta nec justo. Cras non mauris felis.\n
+        Etiam id congue dolor. Cras dictum, odio non pulvinar dictum, neque augue viverra risus, quis euismod felis nibh id lectus.\n
+        Donec varius dui et eros mollis, ut vulputate nunc condimentum.\n
+        Aliquam vulputate turpis nisi. Pellentesque vulputate auctor diam iaculis tincidunt. Praesent lectus turpis, iaculis nec bibendum vel, fermentum in magna. Duis mattis rutrum tempor.\n
+        Suspendisse potenti. \n
+        Fusce sit amet malesuada lorem, vitae faucibus magna. \n
+        Integer rhoncus metus imperdiet, ultrices nisl eu, interdum purus. \n
+        Sed a augue eget justo vestibulum scelerisque eu at ante. Phasellus eu lobortis ipsum. \n
+        Duis in mi non leo volutpat ultricies id ut massa. Vestibulum sed nibh ac erat congue interdum. Phasellus faucibus eu sem ut interdum.\n
+        Ut sed volutpat velit. Phasellus fringilla velit at imperdiet interdum. Fusce pretium neque a auctor pellentesque. Nunc et dui mollis, viverra felis non, venenatis odio. Donec et aliquet est. Donec auctor leo et ipsum commodo aliquet. In pretium fermentum tellus, sit amet porta ante viverra ac. \n
+        Praesent lacinia efficitur sem, eu scelerisque nulla molestie id. Nam tristique ante ut risus congue, id sollicitudin mauris sagittis. \n
+        In hac habitasse platea dictumst. In non tortor tempor magna blandit aliquet eu vitae augue. Duis sit amet malesuada ante, nec suscipit nisi. Praesent tincidunt nibh ac turpis ultricies, id aliquam nisl accumsan. Vestibulum luctus mi vitae massa fermentum commodo. \n
+        Donec tristique eleifend mi sit amet tempor. Duis tempus ante quam, non viverra velit dignissim nec.\n
+        Phasellus nisi quam, sagittis at varius id, mollis nec arcu. Sed at nulla tincidunt, ullamcorper erat quis, vulputate risus. \n
+        Aliquam eget metus vel lacus fringilla tincidunt ultrices vitae leo. Nam eros eros, laoreet ut ex at, varius vehicula massa. In venenatis tincidunt elit non luctus. \n
+        Morbi elementum, massa vel accumsan gravida, massa libero commodo velit, quis semper sapien leo sed tortor. Donec sit amet nisl nulla. \n
+        Sed ultrices leo ut elit vehicula malesuada. Nunc eget felis vitae ligula fringilla tristique. Etiam lectus dolor, imperdiet id purus a, consectetur lobortis magna. \n
+        Sed lacinia fermentum dui, non pharetra nibh feugiat ut.\n
+                Fusce sit amet malesuada lorem, vitae faucibus magna. \n
+        Integer rhoncus metus imperdiet, ultrices nisl eu, interdum purus. \n
+        Sed a augue eget justo vestibulum scelerisque eu at ante. Phasellus eu lobortis ipsum. \n
+        Duis in mi non leo volutpat ultricies id ut massa. Vestibulum sed nibh ac erat congue interdum. Phasellus faucibus eu sem ut interdum.\n
+        Ut sed volutpat velit. Phasellus fringilla velit at imperdiet interdum. Fusce pretium neque a auctor pellentesque. Nunc et dui mollis, viverra felis non, venenatis odio. Donec et aliquet est. Donec auctor leo et ipsum commodo aliquet. In pretium fermentum tellus, sit amet porta ante viverra ac. Praesent lacinia efficitur sem, eu scelerisque nulla molestie id. Nam tristique ante ut risus congue, id sollicitudin mauris sagittis. \n
+        In hac habitasse platea dictumst. In non tortor tempor magna blandit aliquet eu vitae augue. Duis sit amet malesuada ante, nec suscipit nisi. Praesent tincidunt nibh ac turpis ultricies, id aliquam nisl accumsan. Vestibulum luctus mi vitae massa fermentum commodo. Donec tristique eleifend mi sit amet tempor. Duis tempus ante quam, non viverra velit dignissim nec.\n
+        Phasellus nisi quam, sagittis at varius id, mollis nec arcu. Sed at nulla tincidunt, ullamcorper erat quis, vulputate risus. \n
+        Aliquam eget metus vel lacus fringilla tincidunt ultrices vitae leo. Nam eros eros, laoreet ut ex at, varius vehicula massa. In venenatis tincidunt elit non luctus. \n
+        Morbi elementum, massa vel accumsan gravida, massa libero commodo velit, quis semper sapien leo sed tortor. Donec sit amet nisl nulla. \n
+        Sed ultrices leo ut elit vehicula malesuada. Nunc eget felis vitae ligula fringilla tristique. Etiam lectus dolor, imperdiet id purus a, consectetur lobortis magna. \n
+        Sed lacinia fermentum dui, non pharetra nibh feugiat ut.
+</string>
 </resources>

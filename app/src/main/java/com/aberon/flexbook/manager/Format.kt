@@ -16,7 +16,8 @@ abstract class Format {
                 else -> null
             }
         }
-        fun loadBookContent(bookInfo: BookInfo){
+
+        fun loadBookContent(bookInfo: BookInfo) {
             when (bookInfo.book.type) {
                 BookType.EPUB -> EPubFormat().serialize(bookInfo)
                 BookType.FB2 -> FB2Format().serialize(bookInfo)

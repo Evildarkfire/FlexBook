@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets
 import java.util.UUID
 
 class EPubFormat : Format() {
-
     override fun serialize(bookInfo: BookInfo) {
         val bookFile = File(bookInfo.book.path)
         val epubBook = EpubReader().readEpub(bookFile.inputStream())
@@ -47,9 +46,7 @@ class EPubFormat : Format() {
             description = epubBook.metadata.descriptions.joinToString { "$it\n" },
             type = BookType.EPUB,
             path = bookFile.absolutePath
-        ).apply {
-            this.sections = loadSections(epubBook)
-        }
+        ).apply { sections = loadSections(epubBook) }
         /*
         book.metadata
         book.guide

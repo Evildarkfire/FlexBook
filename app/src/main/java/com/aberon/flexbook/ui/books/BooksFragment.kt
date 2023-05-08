@@ -1,4 +1,4 @@
-package com.aberon.flexbook.ui.book
+package com.aberon.flexbook.ui.books
 
 import android.app.Activity
 import android.content.Intent
@@ -20,20 +20,15 @@ import com.aberon.flexbook.store.SQLStore
 import com.aberon.flexbook.tool.Permissions
 
 class BooksFragment : Fragment() {
-
     companion object {
         const val OPEN_FILE_REQUEST_CODE = 111
         const val PERMISSION_REQUEST_CODE = 112
     }
 
-    private var _binding: FragmentBooksBinding? = null
+    private lateinit var binding: FragmentBooksBinding
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    private lateinit var store: SQLStore
     private lateinit var permissions: Permissions
+    private lateinit var store: SQLStore
     private lateinit var filesStore: FilesStore
 
     override fun onCreateView(
@@ -41,7 +36,7 @@ class BooksFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentBooksBinding.inflate(inflater, container, false)
+        binding = FragmentBooksBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         binding.addBook.setOnClickListener { onClickAddBook() }
@@ -158,10 +153,5 @@ class BooksFragment : Fragment() {
                 Log.d("OPEN_FILE_REQUEST_CODE", "File uri not found {${resultCode}}")
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

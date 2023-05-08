@@ -43,7 +43,5 @@ class SQLStore(context: Context) {
         }
     }
 
-    fun addCover(cover: Cover) = db.storeDao().insert(cover)
-    fun addBooks(books: List<Book>) = db.storeDao().insertAll(books)
     fun deleteBook(book: Book) = db.storeDao().delete(book)
 }

@@ -1,4 +1,4 @@
-package com.aberon.flexbook.ui.book
+package com.aberon.flexbook.ui.books
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -9,13 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.aberon.flexbook.ui.reader.READER_BOOK_PARAM
 import com.aberon.flexbook.ui.reader.ReaderActivity
 import com.aberon.flexbook.databinding.FragmentBookBinding
 import com.aberon.flexbook.model.BookInfo
 import com.aberon.flexbook.store.SQLStore
 
 class BookFragment : Fragment() {
+    companion object {
+        const val FRAGMENT_BOOK_PARAM = "book"
+    }
+
     private lateinit var binding: FragmentBookBinding
     private lateinit var store: SQLStore
 
@@ -30,7 +33,7 @@ class BookFragment : Fragment() {
         store = SQLStore.getInstance(requireContext())
 
         arguments?.let { bundle ->
-            bundle.getString(FRAGMENT_BOOK_PARAM)?.let { id->
+            bundle.getString(FRAGMENT_BOOK_PARAM)?.let { id ->
                 bookInfo = store.getBookById(id)
             }
         }
@@ -48,7 +51,7 @@ class BookFragment : Fragment() {
         view.setOnClickListener {
             val intent = Intent(activity, ReaderActivity::class.java).apply {
                 bookInfo?.let { info ->
-                    putExtra(READER_BOOK_PARAM, info.book.bookId)
+                    putExtra(ReaderActivity.READER_BOOK_PARAM, info.book.bookId)
                 }
             }
             startActivity(intent)
@@ -69,23 +72,5 @@ class BookFragment : Fragment() {
             }
         }
         super.onViewCreated(view, savedInstanceState)
-    }
-
-    companion object {
-        const val FRAGMENT_BOOK_PARAM = "book"
-
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         * @param param1 model Book.
-         * @return A new instance of fragment BookFragment.
-         */
-        @JvmStatic
-        fun newInstance(param1: Int) =
-            BookFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(FRAGMENT_BOOK_PARAM, param1)
-                }
-            }
     }
 }

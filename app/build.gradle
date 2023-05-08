@@ -53,6 +53,7 @@ dependencies {
     // bd
     implementation 'androidx.room:room-runtime:2.4.3'
     implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.glance:glance:1.0.0-alpha03'
     // To use Kotlin annotation processing tool (kapt)
     kapt "androidx.room:room-compiler:2.4.3"
 

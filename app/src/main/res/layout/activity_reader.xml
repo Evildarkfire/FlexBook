@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,14 +7,48 @@
     android:theme="@style/ThemeOverlay.FlexBook.FullscreenContainer"
     tools:context=".ui.reader.ReaderActivity">
 
-    <TextView
-        android:id="@+id/fullscreen_content"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/reader_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:keepScreenOn="true"
-        android:padding="10dp"
-        android:textColor="?attr/fullscreenTextColor"
-        android:textIsSelectable="true"
-        android:textSize="17sp" />
+        android:orientation="horizontal" />
 
-</FrameLayout>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:visibility="invisible">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:layout_weight=".98">
+
+            <TextView
+                android:id="@+id/page_blanck"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/lorem_ipsum"
+                android:textSize="17sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+
+            android:layout_weight=".02">
+
+            <TextView
+                android:id="@+id/page_number"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textIsSelectable="true"
+                android:textSize="17sp" />
+        </TableRow>
+    </TableLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

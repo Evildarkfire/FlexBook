@@ -11,7 +11,6 @@ import javax.xml.parsers.ParserConfigurationException
 
 
 class FB2Format : Format() {
-
     override fun serialize(bookInfo: BookInfo) {
         val bookFile = File(bookInfo.book.path)
         val fictionBook = FictionBook(bookFile)
