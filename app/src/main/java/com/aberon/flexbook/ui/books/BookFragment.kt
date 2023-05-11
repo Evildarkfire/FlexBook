@@ -3,12 +3,14 @@ package com.aberon.flexbook.ui.books
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.view.ContextMenu
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.aberon.flexbook.R
 import com.aberon.flexbook.ui.reader.ReaderActivity
 import com.aberon.flexbook.databinding.FragmentBookBinding
 import com.aberon.flexbook.model.BookInfo
@@ -17,6 +19,7 @@ import com.aberon.flexbook.store.SQLStore
 class BookFragment : Fragment() {
     companion object {
         const val FRAGMENT_BOOK_PARAM = "book"
+        const val MENU_DELETE = 11111
     }
 
     private lateinit var binding: FragmentBookBinding
@@ -56,6 +59,7 @@ class BookFragment : Fragment() {
             }
             startActivity(intent)
         }
+        registerForContextMenu(view)
         return view
     }
 
@@ -72,5 +76,17 @@ class BookFragment : Fragment() {
             }
         }
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu,
+        v: View,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        menu.add(0, MENU_DELETE, 0, R.string.delete).setOnMenuItemClickListener {
+            bookInfo?.book?.let { it1 -> store.deleteBook(it1) }
+            true
+        }
     }
 }

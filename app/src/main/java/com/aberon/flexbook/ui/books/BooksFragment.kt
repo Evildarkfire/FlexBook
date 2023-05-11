@@ -37,13 +37,12 @@ class BooksFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentBooksBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
+        val view = binding.root
         binding.addBook.setOnClickListener { onClickAddBook() }
-
         permissions = Permissions(activity!!.applicationContext)
         store = SQLStore.getInstance(activity!!.applicationContext)
         filesStore = FilesStore(activity!!.applicationContext)
+
         val fragmentManager = parentFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         store.books.forEach { bookInfo ->
@@ -55,7 +54,7 @@ class BooksFragment : Fragment() {
         }
         fragmentTransaction.commit()
 
-        return root
+        return view
     }
 
     private fun onClickAddBook() {

@@ -16,7 +16,7 @@
     </style>
 
     <style name="ThemeOverlay.FlexBook.FullscreenContainer" parent="Theme.FlexBook.Fullscreen">
-        <item name="fullscreenBackgroundColor">@color/grey</item>
+        <item name="fullscreenBackgroundColor">@color/white</item>
         <item name="fullscreenTextColor">@color/black</item>
     </style>
 

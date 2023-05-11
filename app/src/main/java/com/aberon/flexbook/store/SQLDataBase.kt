@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.aberon.flexbook.model.*
 
 @Database(
-    entities = [Book::class, Author::class, Email::class, Cover::class],
+    entities = [Book::class, BookParametr::class, Author::class, Email::class, Cover::class, Preference::class],
     version = 1
 )
 abstract class SQLDataBase : RoomDatabase() {

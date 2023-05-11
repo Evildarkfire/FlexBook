@@ -64,7 +64,8 @@ class FB2Format : Format() {
             BookInfo(
                 book = book,
                 covers = covers,
-                authors = authors
+                authors = authors,
+                parametrs = mutableListOf()
             )
         } catch (e: ParserConfigurationException) {
             e.printStackTrace()
@@ -79,8 +80,9 @@ class FB2Format : Format() {
     }
 
     private fun loadSections(fictionBook: FictionBook): List<Section> {
-        return fictionBook.body.sections.map { section ->
+        return fictionBook.body.sections.mapIndexed { index, section ->
             Section(
+                id = index,
                 title = section.titles?.lastOrNull()?.paragraphs?.lastOrNull()?.text,
                 elements = section.elements.map { element ->
                     Paragraph(

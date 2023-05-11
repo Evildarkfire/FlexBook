@@ -15,7 +15,4 @@ data class Book(
 ) {
     @Ignore
     var sections: List<Section>? = null
-
-    @Ignore
-    var parameters: Map<String, String>? = null
 }

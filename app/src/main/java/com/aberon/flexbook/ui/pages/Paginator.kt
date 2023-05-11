@@ -14,7 +14,7 @@ class Paginator(
     private val lineSpacingExtra: Float,
     private val paint: TextPaint
 ) {
-    private val pages: MutableList<CharSequence>
+    private val pages: MutableList<PageInfo>
     val size: Int
         get() = pages.size
 
@@ -23,8 +23,21 @@ class Paginator(
         sections()
     }
 
+    fun getStartPage(pageNumber: Int): Pair<Int, Int> {
+        val page = pages[pageNumber]
+        return page.sectionIndex to page.startOffset
+    }
+
+    fun getPageIndexFromStart(sectionToStartOffset: Pair<Int, Int>): Int {
+        val page = pages.firstOrNull { p ->
+            p.sectionIndex == sectionToStartOffset.first
+                    && p.startOffset == sectionToStartOffset.second
+        }
+        return pages.indexOf(page)
+    }
+
     operator fun get(index: Int): CharSequence? {
-        return if (index >= 0 && index < pages.size) pages[index] else null
+        return if (index >= 0 && index < pages.size) pages[index].text else null
     }
 
     private fun sections() {
@@ -34,16 +47,16 @@ class Paginator(
             }?.requireNoNulls()?.joinToString("\n\n")?.let { sequens ->
                 if (sequens.isNotBlank()) {
                     if (section.title != null && section.title.isNotBlank()) {
-                        layout("${section.title}\n\n${sequens}")
+                        layout(section.id, "${section.title}\n\n${sequens}")
                     } else {
-                        layout(sequens)
+                        layout(section.id, sequens)
                     }
                 }
             }
         }
     }
 
-    private fun layout(text: CharSequence) {
+    private fun layout(section: Int, text: CharSequence) {
         val layout = StaticLayout.Builder.obtain(text, 0, text.length, paint, width)
             .setAlignment(Layout.Alignment.ALIGN_NORMAL)
             .setLineSpacing(lineSpacingExtra, lineSpacingMultiplier)
@@ -54,18 +67,36 @@ class Paginator(
         var pageHeight = height
         for (i in 0 until lines) {
             if (pageHeight < layout.getLineBottom(i)) {
-                addPage(text.subSequence(startOffset, layout.getLineStart(i)))
+                addPage(
+                    PageInfo(
+                        section,
+                        startOffset,
+                        text.subSequence(startOffset, layout.getLineStart(i))
+                    )
+                )
                 startOffset = layout.getLineStart(i)
                 pageHeight = layout.getLineTop(i) + height
             }
             if (i == lines - 1) {
-                addPage(text.subSequence(startOffset, layout.getLineEnd(i)))
+                addPage(
+                    PageInfo(
+                        section,
+                        startOffset,
+                        text.subSequence(startOffset, layout.getLineEnd(i))
+                    )
+                )
                 return
             }
         }
     }
 
-    private fun addPage(text: CharSequence) {
-        pages.add(text)
+    private fun addPage(page: PageInfo) {
+        pages.add(page)
     }
+
+    data class PageInfo(
+        val sectionIndex: Int,
+        val startOffset: Int,
+        val text: CharSequence
+    )
 }

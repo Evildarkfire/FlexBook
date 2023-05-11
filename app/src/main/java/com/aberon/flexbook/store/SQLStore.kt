@@ -3,9 +3,7 @@ package com.aberon.flexbook.store
 import android.content.Context
 import androidx.room.Room
 import com.aberon.flexbook.manager.Format
-import com.aberon.flexbook.model.Book
-import com.aberon.flexbook.model.BookInfo
-import com.aberon.flexbook.model.Cover
+import com.aberon.flexbook.model.*
 
 class SQLStore(context: Context) {
     companion object {
@@ -22,10 +20,16 @@ class SQLStore(context: Context) {
         .build()
 
     val books: List<BookInfo>
-        get() = db.storeDao().getAll()
+        get() = db.storeDao().loadBooks().distinctBy { bookInfo -> bookInfo.book.bookId }
+
+    val preference: Map<PreferenceKey, Preference>
+        get() = db
+            .storeDao()
+            .loadPreferences()
+            .associateBy { preference -> preference.preferenceId }
 
     fun getBookById(bookId: String): BookInfo {
-        val bookInfo = db.storeDao().loadAllById(bookId)
+        val bookInfo = db.storeDao().loadById(bookId)
         Format.loadBookContent(bookInfo)
         return bookInfo
     }
@@ -41,6 +45,25 @@ class SQLStore(context: Context) {
                 db.storeDao().insert(email)
             }
         }
+    }
+
+    fun addBookParametr(bookParametr: BookParametr) {
+        db.storeDao().insert(bookParametr)
+    }
+
+    fun updatePreferences(newPreferences: Map<PreferenceKey, Preference>) {
+        val storedPreferences = preference
+        newPreferences.forEach { newPref ->
+            if (storedPreferences[newPref.key] != null) {
+                db.storeDao().update(newPref.value)
+            } else {
+                db.storeDao().insert(newPref.value)
+            }
+        }
+    }
+
+    fun updateBookParametr(parametr: BookParametr) {
+        db.storeDao().update(parametr)
     }
 
     fun deleteBook(book: Book) = db.storeDao().delete(book)

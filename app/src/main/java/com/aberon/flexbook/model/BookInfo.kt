@@ -17,5 +17,11 @@ data class BookInfo(
         parentColumn = "bookId",
         entityColumn = "ownedBookId"
     )
-    var authors: List<AuthorInfo>
+    var authors: List<AuthorInfo>,
+    @Relation(
+        entity = BookParametr::class,
+        parentColumn = "bookId",
+        entityColumn = "parametrOwnerId"
+    )
+    var parametrs: List<BookParametr>
 )
