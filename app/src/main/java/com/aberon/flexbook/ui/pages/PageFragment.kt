@@ -1,14 +1,27 @@
 package com.aberon.flexbook.ui.pages
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
-import androidx.core.view.children
+import androidx.core.view.*
 import androidx.fragment.app.Fragment
+import com.aberon.flexbook.databinding.BottomSheetBinding
 import com.aberon.flexbook.databinding.PageItemLayoutBinding
+import com.aberon.flexbook.model.Language
+import com.aberon.flexbook.model.Preference
+import com.aberon.flexbook.model.PreferenceKey
+import com.aberon.flexbook.store.SQLStore
 import com.aberon.flexbook.tool.Translation
+import com.aberon.flexbook.ui.settings.SettingsFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class PageFragment : Fragment() {
+
+class PageFragment(bsBinding: BottomSheetBinding) : Fragment() {
     companion object {
         enum class MenuItems(val id: Int) {
             COPY(android.R.id.copy),
@@ -23,9 +36,25 @@ class PageFragment : Fragment() {
         }
     }
 
+    private val bottomSheet = bsBinding.bottomSheet
+    private val bottomSheetText = bsBinding.bottomSheetText
+    private val behavior = BottomSheetBehavior.from(bottomSheet)
+    private lateinit var store: SQLStore
+    private lateinit var preference: Map<PreferenceKey, Preference>
     private lateinit var binding: PageItemLayoutBinding
+    private var bookLanguage: String? = null
+    private lateinit var targetLanguage: String
     private lateinit var pageContent: TextView
     private lateinit var pageNumber: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        store = SQLStore.getInstance(requireContext())
+        preference = store.preference
+        targetLanguage = preference[PreferenceKey.TargetLanguage]?.let { tl ->
+            Language[tl.preferenceValue]?.short
+        } ?: SettingsFragment.defaulLanguage.short
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,8 +62,13 @@ class PageFragment : Fragment() {
     ): View {
         binding = PageItemLayoutBinding.inflate(inflater, container, false)
         val view = binding.root
-
+        val prefPadding =
+            SettingsFragment.getMarginFromValue(preference[PreferenceKey.ReaderMargin]?.preferenceValue)
+        val textSize =
+            SettingsFragment.getTextSizeFromValue(preference[PreferenceKey.ReaderTextSize]?.preferenceValue)
+        binding.pageContentContainer.setPadding(prefPadding)
         pageContent = binding.pageContent.apply {
+            setTextSize(textSize)
             customSelectionActionModeCallback = object : ActionMode.Callback {
                 override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
                     menu?.add(
@@ -46,13 +80,11 @@ class PageFragment : Fragment() {
                     val translate = Translation()
                     translate.setOnTranslationCompleteListener(object :
                         Translation.OnTranslationCompleteListener {
-                        override fun onStartTranslation() {
-                            // here you can perform initial work before translated the text like displaying progress bar
-                        }
-
+                        override fun onStartTranslation() {}
                         override fun onCompleted(text: String?) {
                             text?.let { r ->
-                                menu?.add(r)
+                                bottomSheetText.text = r
+                                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
                             }
                         }
 
@@ -60,8 +92,8 @@ class PageFragment : Fragment() {
                     })
                     translate.execute(
                         "${text.subSequence(selectionStart, selectionEnd)}",
-                        "ru",
-                        "en"
+                        bookLanguage,
+                        targetLanguage
                     )
                     return true
                 }
@@ -75,27 +107,42 @@ class PageFragment : Fragment() {
                 }
 
                 override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+                    val text = text.subSequence(selectionStart, selectionEnd)
                     when (item?.itemId) {
                         MenuItems.COPY.id -> {
-//                            val clipboard: ClipboardManager? = itemView
-//                                .context
-//                                .getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-//                            val clip = ClipData.newPlainText(
-//                                "copy",
-//                                text.subSequence(selectionStart, selectionEnd)
-//                            )
-//                            clipboard?.setPrimaryClip(clip)//TODO fix copy
+                            val clipboard: ClipboardManager? = view
+                                .context
+                                .getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+                            val clip = ClipData.newPlainText(
+                                "copy",
+                                text
+                            )
+                            clipboard?.setPrimaryClip(clip)
                         }
-
+                        MenuItems.OPEN_REVERSO.id -> {
+                            val bl = Language.fromShort(bookLanguage!!)!!.full
+                            val tl = Language.fromShort(targetLanguage)!!.full
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://context.reverso.net/перевод/$bl-$tl/$text")
+                            )
+                            startActivity(intent)
+                        }
                     }
                     return true
                 }
 
-                override fun onDestroyActionMode(mode: ActionMode?) {}
+                override fun onDestroyActionMode(mode: ActionMode?) {
+                    behavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
 
             }
         }
-        pageNumber = binding.pageNumber
+        pageNumber = binding.pageNumber.apply {
+            setTextSize(textSize)
+        }
+        binding.pageNumberContainer.setPadding(prefPadding)
+        behavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         return view
     }
@@ -104,6 +151,7 @@ class PageFragment : Fragment() {
         arguments?.let {
             pageContent.text = (it.getString("text"))
             pageNumber.text = (it.getString("page"))
+            bookLanguage = (it.getString("bookLang"))
         }
     }
 }

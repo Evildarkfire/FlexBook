@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:theme="@style/ThemeOverlay.FlexBook.FullscreenContainer">
 
     <TableRow
+        android:id="@+id/page_content_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight=".98">
+        android:layout_weight=".98"
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/page_content"
@@ -15,23 +17,24 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:keepScreenOn="true"
-            android:textColor="@color/black"
+            android:textColor="?attr/fullscreenTextColor"
             android:textIsSelectable="true"
             android:textSize="17sp" />
     </TableRow>
 
     <TableRow
+        android:id="@+id/page_number_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight=".02">
+        android:layout_weight=".02"
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/page_number"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="@color/black"
+            android:textColor="?attr/fullscreenTextColor"
             android:textIsSelectable="true"
             android:textSize="17sp" />
     </TableRow>

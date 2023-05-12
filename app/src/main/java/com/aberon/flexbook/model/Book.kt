@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 data class Book(
     @PrimaryKey
     var bookId: String,
+    var language: String,
     var title: String?,
     var description: String?,
     var type: BookType,

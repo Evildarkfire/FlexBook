@@ -55,6 +55,7 @@ class FB2Format : Format() {
 
             val book = Book(
                 bookId = bookId,
+                language = fictionBook.lang,
                 title = title,
                 description = "DESC", // TODO DESC
                 type = BookType.FB2,

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="120dp"
+    android:theme="@style/Theme.FlexBook"
     tools:context=".ui.books.BookFragment">
 
     <TableLayout
@@ -27,6 +28,7 @@
                 android:src="@android:drawable/btn_dialog" />
 
             <LinearLayout
+                android:layout_gravity="center"
                 android:layout_margin="5dp"
                 android:layout_weight=".86"
                 android:orientation="vertical">
@@ -37,7 +39,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".86"
                     android:padding="5dp"
-                    android:text="" />
+                    android:text=""
+                    android:textColor="?attr/textFillColor" />
 
                 <TextView
                     android:id="@+id/book_author"
@@ -45,7 +48,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".86"
                     android:padding="5dp"
-                    android:text="" />
+                    android:text=""
+                    android:textColor="?attr/textFillColor" />
             </LinearLayout>
         </TableRow>
     </TableLayout>

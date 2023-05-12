@@ -42,6 +42,7 @@ class EPubFormat : Format() {
 
         val book = Book(
             bookId = bookId,
+            language = epubBook.metadata.language,
             title = epubBook.title,
             description = epubBook.metadata.descriptions.joinToString { "$it\n" },
             type = BookType.EPUB,

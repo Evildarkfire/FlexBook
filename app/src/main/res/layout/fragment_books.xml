@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.FlexBook"
     tools:context=".ui.books.BooksFragment">
 
     <Button
@@ -12,6 +13,7 @@
         android:layout_height="80dp"
         android:layout_margin="20dp"
         android:background="@drawable/ic_plus"
+        android:theme="@style/Theme.FlexBook.Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 

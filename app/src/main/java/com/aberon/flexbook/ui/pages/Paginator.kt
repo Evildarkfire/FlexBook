@@ -12,7 +12,8 @@ class Paginator(
     private val width: Int,
     private val lineSpacingMultiplier: Float,
     private val lineSpacingExtra: Float,
-    private val paint: TextPaint
+    private val paint: TextPaint,
+    private val startLine: String
 ) {
     private val pages: MutableList<PageInfo>
     val size: Int
@@ -43,7 +44,7 @@ class Paginator(
     private fun sections() {
         bookInfo.book.sections?.forEach { section ->
             section.elements?.map { paragraph ->
-                "${paragraph.text}"
+                "$startLine${paragraph.text}"
             }?.requireNoNulls()?.joinToString("\n\n")?.let { sequens ->
                 if (sequens.isNotBlank()) {
                     if (section.title != null && section.title.isNotBlank()) {
@@ -57,7 +58,8 @@ class Paginator(
     }
 
     private fun layout(section: Int, text: CharSequence) {
-        val layout = StaticLayout.Builder.obtain(text, 0, text.length, paint, width)
+        val layout = StaticLayout.Builder
+            .obtain(text, 0, text.length, paint, width)
             .setAlignment(Layout.Alignment.ALIGN_NORMAL)
             .setLineSpacing(lineSpacingExtra, lineSpacingMultiplier)
             .setIncludePad(false)

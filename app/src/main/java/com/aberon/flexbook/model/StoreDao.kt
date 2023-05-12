@@ -22,7 +22,7 @@ interface StoreDao {
 
     @Transaction
     @Query(
-        "SELECT book.bookId, book.title, book.description, book.type, book.path, " +
+        "SELECT book.bookId, book.language, book.title, book.description, book.type, book.path, " +
                 "bookParametr.parametrId ,bookParametr.parametrOwnerId, bookParametr.parametrValue, " +
                 "covers.coverId, covers.coverPath, " +
                 "author.authorId, author.firstName, author.lastName, author.middleName, " +
