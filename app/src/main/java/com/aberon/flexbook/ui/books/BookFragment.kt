@@ -86,6 +86,10 @@ class BookFragment : Fragment() {
         super.onCreateContextMenu(menu, v, menuInfo)
         menu.add(0, MENU_DELETE, 0, R.string.delete).setOnMenuItemClickListener {
             bookInfo?.book?.let { it1 -> store.deleteBook(it1) }
+            val fragmentManager = parentFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.remove(this)
+            fragmentTransaction.commit()
             true
         }
     }

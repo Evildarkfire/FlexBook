@@ -7,6 +7,7 @@ import com.aberon.flexbook.model.*
 
 class SQLStore(context: Context) {
     companion object {
+        private const val DATABASE_NAME = "flexbook"
         private var instance: SQLStore? = null
 
         @Synchronized
@@ -14,13 +15,15 @@ class SQLStore(context: Context) {
             instance ?: SQLStore(context).apply { instance = this }
     }
 
-    private val DATABASE_NAME = "flexbook"
     private val db = Room.databaseBuilder(context, SQLDataBase::class.java, DATABASE_NAME)
         .allowMainThreadQueries()
         .build()
 
     val books: List<BookInfo>
-        get() = db.storeDao().loadBooks().distinctBy { bookInfo -> bookInfo.book.bookId }
+        get() = db
+            .storeDao()
+            .loadBooks()
+            .distinctBy { bookInfo -> bookInfo.book.bookId }
 
     val preference: Map<PreferenceKey, Preference>
         get() = db
