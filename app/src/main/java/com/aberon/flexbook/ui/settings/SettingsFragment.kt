@@ -9,6 +9,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
+import com.aberon.flexbook.R
 import com.aberon.flexbook.databinding.SettingsFragmentBinding
 import com.aberon.flexbook.model.Language
 import com.aberon.flexbook.model.Preference
@@ -73,7 +74,7 @@ class SettingsFragment : Fragment() {
 
         val languageAdapter = ArrayAdapter(
             view.context,
-            android.R.layout.simple_spinner_dropdown_item,
+            R.layout.spinner_item,
             Language.all()
         )
         preferencesLang = binding.preferencesLanguage.apply {

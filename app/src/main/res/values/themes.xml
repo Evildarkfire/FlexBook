@@ -47,4 +47,6 @@
     </style>
 
     <style name="Theme.FlexBook.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.FlexBook.Spinner" parent=""/>
 </resources>

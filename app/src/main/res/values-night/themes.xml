@@ -27,4 +27,6 @@
     <style name="Theme.FlexBook.Button">
         <item name="itemIconTint">@color/purple_500</item>
     </style>
+
+    <style name="Theme.FlexBook.Spinner" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 </resources>

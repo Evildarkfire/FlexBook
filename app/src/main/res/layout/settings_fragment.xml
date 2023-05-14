@@ -58,8 +58,8 @@
             android:id="@+id/preferences_language"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:textColor="?attr/textFillColor" />
+            android:layout_weight=".6"
+            android:theme="@style/Theme.FlexBook.Spinner" />
     </TableRow>
 
     <TableRow
