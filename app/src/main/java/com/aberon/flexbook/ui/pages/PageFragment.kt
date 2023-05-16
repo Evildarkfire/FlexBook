@@ -71,12 +71,20 @@ class PageFragment(bsBinding: BottomSheetBinding) : Fragment() {
             setTextSize(textSize)
             customSelectionActionModeCallback = object : ActionMode.Callback {
                 override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                    menu?.children
+                        ?.map { it.itemId }
+                        ?.filter { !MenuItems.ids.contains(it) }
+                        ?.forEach { menu.removeItem(it) }
                     menu?.add(
                         0,
                         MenuItems.OPEN_REVERSO.id,
                         0,
                         "Открыть в Reverso context"
                     )
+                    return true
+                }
+
+                override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
                     val translate = Translation()
                     translate.setOnTranslationCompleteListener(object :
                         Translation.OnTranslationCompleteListener {
@@ -95,14 +103,6 @@ class PageFragment(bsBinding: BottomSheetBinding) : Fragment() {
                         bookLanguage,
                         targetLanguage
                     )
-                    return true
-                }
-
-                override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-                    menu?.children
-                        ?.map { it.itemId }
-                        ?.filter { !MenuItems.ids.contains(it) }
-                        ?.forEach { menu.removeItem(it) }
                     return true
                 }
 

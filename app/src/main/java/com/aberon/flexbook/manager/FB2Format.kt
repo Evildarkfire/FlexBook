@@ -8,6 +8,7 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 import javax.xml.parsers.ParserConfigurationException
+import kotlin.collections.ArrayList
 
 
 class FB2Format : Format() {
@@ -81,7 +82,7 @@ class FB2Format : Format() {
     }
 
     private fun loadSections(fictionBook: FictionBook): List<Section> {
-        return fictionBook.body.sections.mapIndexed { index, section ->
+        return loadSections(fictionBook.body.sections).mapIndexed { index, section ->
             Section(
                 id = index,
                 title = section.titles?.lastOrNull()?.paragraphs?.lastOrNull()?.text,
@@ -94,5 +95,19 @@ class FB2Format : Format() {
                 images = null
             )
         }
+    }
+
+    private fun loadSections(sections: ArrayList<com.kursx.parser.fb2.Section>)
+            : ArrayList<com.kursx.parser.fb2.Section> {
+        val array = arrayListOf<com.kursx.parser.fb2.Section>()
+        sections.forEach { section ->
+            if (section.elements.isNotEmpty()) {
+                array.add(section)
+            }
+            if (section.sections.isNotEmpty()) {
+                array.addAll(loadSections(section.sections))
+            }
+        }
+        return array
     }
 }

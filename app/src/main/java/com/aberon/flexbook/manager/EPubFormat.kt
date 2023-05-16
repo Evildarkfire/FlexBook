@@ -63,7 +63,7 @@ class EPubFormat : Format() {
     }
 
     private fun loadSections(epubBook: nl.siegmann.epublib.domain.Book): List<Section> {
-        return epubBook.contents.mapIndexed { index, content ->
+        val result =  epubBook.contents.mapIndexed { index, content ->
             val elements = when (content.mediaType.name) {
                 "application/xhtml+xml" ->
                     Html.fromHtml(
@@ -79,10 +79,14 @@ class EPubFormat : Format() {
                 .toList()
             Section(
                 index,
-                elements.firstOrNull()?.text ?: "",
+                content.title,
                 elements,
                 emptyList()
             )
+        }.toMutableList()
+        result.firstOrNull()?.let {
+            result.remove(it) //TODO fix
         }
+        return result
     }
 }
